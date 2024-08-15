@@ -3,6 +3,7 @@ package org.kreditco.view;
 import org.kreditco.model.Loan;
 import org.kreditco.model.Vehicle;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class LoanView {
@@ -13,16 +14,46 @@ public class LoanView {
     }
 
     public Vehicle getVehicleDetails() {
-        System.out.print("Input Jenis Kendaraan (Motor/Mobil): ");
-        String type = scanner.nextLine().trim().toLowerCase();
+        String type = "";
+        String condition = "";
+        int year = 0;
 
-        System.out.print("Input Kendaraan Bekas/Baru: ");
-        String condition = scanner.nextLine().trim().toLowerCase();
 
-        System.out.print("Input Tahun Kendaraan (4 Digit): ");
-        int year = scanner.nextInt();
-        scanner.nextLine();
+        while (true) {
+            System.out.print("Input Jenis Kendaraan (Motor/Mobil): ");
+            type = scanner.nextLine().trim().toLowerCase();
+            if (type.equals("motor") || type.equals("mobil")) {
+                break;
+            } else {
+                System.out.println("Input tidak valid. Harap masukkan 'Motor' atau 'Mobil'.");
+            }
+        }
 
+        while (true) {
+            System.out.print("Input Kendaraan Bekas/Baru: ");
+            condition = scanner.nextLine().trim().toLowerCase();
+            if (condition.equals("bekas") || condition.equals("baru")) {
+                break;
+            } else {
+                System.out.println("Input tidak valid. Harap masukkan 'Bekas' atau 'Baru'.");
+            }
+        }
+
+        while (true) {
+            try {
+                System.out.print("Input Tahun Kendaraan (4 Digit): ");
+                year = scanner.nextInt();
+                scanner.nextLine(); // consume newline
+                if (year >= 1000 && year <= 9999) {
+                    break;
+                } else {
+                    System.out.println("Input tidak valid. Harap masukkan tahun 4 digit.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input tidak valid. Harap masukkan angka tahun.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
         Vehicle vehicle = new Vehicle();
         vehicle.setType(type);
         vehicle.setCondition(condition);
@@ -32,14 +63,54 @@ public class LoanView {
     }
 
     public Loan getLoanDetails() {
-        System.out.print("Input Jumlah Pinjaman Total: ");
-        double loanAmount = scanner.nextDouble();
+        double loanAmount = 0;
+        int tenorYears = 0;
+        double downPayment = 0;
 
-        System.out.print("Input Tenor Pinjaman (1-6 thn): ");
-        int tenorYears = scanner.nextInt();
+        while (true) {
+            try {
+                System.out.print("Input Jumlah Pinjaman Total: ");
+                loanAmount = scanner.nextDouble();
+                if (loanAmount > 0) {
+                    break;
+                } else {
+                    System.out.println("Input tidak valid. Harap masukkan jumlah pinjaman yang positif.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input tidak valid. Harap masukkan angka.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
 
-        System.out.print("Input Jumlah DP: ");
-        double downPayment = scanner.nextDouble();
+        while (true) {
+            try {
+                System.out.print("Input Tenor Pinjaman (1-6 thn): ");
+                tenorYears = scanner.nextInt();
+                if (tenorYears >= 1 && tenorYears <= 6) {
+                    break;
+                } else {
+                    System.out.println("Input tidak valid. Harap masukkan angka antara 1-6.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input tidak valid. Harap masukkan angka.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
+
+        while (true) {
+            try {
+                System.out.print("Input Jumlah DP: ");
+                downPayment = scanner.nextDouble();
+                if (downPayment > 0) {
+                    break;
+                } else {
+                    System.out.println("Input tidak valid. Harap masukkan jumlah DP yang positif.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input tidak valid. Harap masukkan angka.");
+                scanner.nextLine(); // clear invalid input
+            }
+        }
 
         Loan loan = new Loan();
         loan.setLoanAmount(loanAmount);
