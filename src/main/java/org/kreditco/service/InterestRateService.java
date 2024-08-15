@@ -1,32 +1,30 @@
 package org.kreditco.service;
 
 import org.kreditco.model.Vehicle;
+import org.kreditco.repository.InterestSimulator;
 
-public class InterestRateService {
+public class InterestRateService implements InterestSimulator {
+    @Override
+    public double[] calculateInterestRate(Vehicle vehicle, int year) {
+        double baseRate;
 
-    public double getBaseInterestRate(String vehicleType) {
-       double balikan;
-        if(vehicleType.equals("mobil")){
-        balikan = 0.8;
+        if(vehicle.getType().equals("mobil")){
+            baseRate = 0.8;
         }else{
-            balikan = 0.9;
+            baseRate = 0.9;
         }
-        return balikan;
-    }
-
-    public double[] calculateInterestRates(Vehicle vehicle, int tenorYears) {
-        double baseRate = getBaseInterestRate(vehicle.getType());
-        double[] rates = new double[tenorYears];
-
-        for (int i = 0; i < tenorYears; i++) {
-            if (i % 2 == 0 && i > 0) {
-                baseRate += 0.05;
-            } else {
-                baseRate += 0.01;
+        double[] interestRate = new double[year];
+        for (int i = 0; i < year; i++) {
+            if(i != 0){
+                if (i % 2 == 0 && i > 0) {
+                    baseRate += 0.05;
+                } else {
+                    baseRate += 0.01;
+                }
             }
-            rates[i] = baseRate;
+            interestRate[i] = baseRate;
         }
-
-        return rates;
+    return interestRate;
     }
+
 }

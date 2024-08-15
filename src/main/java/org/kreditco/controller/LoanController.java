@@ -2,23 +2,23 @@ package org.kreditco.controller;
 
 
 import org.kreditco.model.Loan;
-import org.kreditco.model.LoanCalculator;
 import org.kreditco.model.Vehicle;
+import org.kreditco.repository.LoanSimulator;
 import org.kreditco.view.LoanView;
 
 public class LoanController {
     private LoanView view;
-    private LoanCalculator calculator;
+    private LoanSimulator loanSimulator;
 
-    public LoanController(LoanView view) {
+    public LoanController(LoanView view, LoanSimulator loanSimulator) {
         this.view = view;
-        this.calculator = new LoanCalculator();
+        this.loanSimulator = loanSimulator;
     }
 
     public void processLoan() {
         Vehicle vehicle = view.getVehicleDetails();
         Loan loan = view.getLoanDetails();
-        calculator.calculateInstallments(loan, vehicle);
+        loanSimulator.calculateInstallments(loan, vehicle);
         view.displayInstallmentDetails(loan);
     }
 }
