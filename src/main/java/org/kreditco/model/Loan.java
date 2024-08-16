@@ -55,6 +55,12 @@ public class Loan {
         this.interestRates = interestRates;
     }
 
+    public Loan(double loanAmount, int tenorYears, double downPayment) {
+        this.loanAmount = loanAmount;
+        this.tenorYears = tenorYears;
+        this.downPayment = downPayment;
+    }
+
     public Loan() {
     }
 }
