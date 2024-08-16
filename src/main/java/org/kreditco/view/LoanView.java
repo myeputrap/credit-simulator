@@ -12,12 +12,12 @@ public class LoanView {
     public LoanView() {
         scanner = new Scanner(System.in);
     }
-
+    Boolean isNew;
     public Vehicle getVehicleDetails() {
         String type = "";
         String condition = "";
         int year = 0;
-
+        int currentYear = java.time.Year.now().getValue();
 
         while (true) {
             System.out.print("Input Jenis Kendaraan (Motor/Mobil): ");
@@ -46,13 +46,18 @@ public class LoanView {
                 scanner.nextLine(); // consume newline
                 if (year >= 1000 && year <= 9999) {
                     break;
-                } else {
+                } else if (condition.equalsIgnoreCase("baru") && year < currentYear - 1) {
+                    System.out.println("Input tidak valid. Tahun Kendaraan tidak boleh sama dengan tahun " + currentYear);
+                }else {
                     System.out.println("Input tidak valid. Harap masukkan tahun 4 digit.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Input tidak valid. Harap masukkan angka tahun.");
                 scanner.nextLine(); // clear invalid input
             }
+        }
+        if (condition.equals("baru")){
+            isNew = true;
         }
         Vehicle vehicle = new Vehicle();
         vehicle.setType(type);
@@ -71,14 +76,16 @@ public class LoanView {
             try {
                 System.out.print("Input Jumlah Pinjaman Total: ");
                 loanAmount = scanner.nextDouble();
-                if (loanAmount > 0) {
+                if(loanAmount > 1000000000.0){
+                    System.out.println("Input tidak valid. Jumlah pinjaman tidak boleh lebih besar dari 1000000000.");
+                }else if (loanAmount > 0)  {
                     break;
-                } else {
+                }else {
                     System.out.println("Input tidak valid. Harap masukkan jumlah pinjaman yang positif.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Input tidak valid. Harap masukkan angka.");
-                scanner.nextLine(); // clear invalid input
+                scanner.nextLine();
             }
         }
 
