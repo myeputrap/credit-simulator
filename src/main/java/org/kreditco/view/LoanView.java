@@ -9,16 +9,17 @@ import java.util.Scanner;
 public class LoanView {
     private Scanner scanner;
 
-    public LoanView() {
-        scanner = new Scanner(System.in);
+    public LoanView(Scanner scanner) {
+        this.scanner = scanner;
     }
+
     Boolean isNew;
     public Vehicle getVehicleDetails() {
         String type = "";
         String condition = "";
         int year = 0;
         int currentYear = java.time.Year.now().getValue();
-
+        scanner.nextLine();
         while (true) {
             System.out.print("Input Jenis Kendaraan (Motor/Mobil): ");
             type = scanner.nextLine().trim().toLowerCase();

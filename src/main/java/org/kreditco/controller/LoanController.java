@@ -15,9 +15,11 @@ public class LoanController {
         this.loanSimulator = loanSimulator;
     }
 
-    public void processLoan() {
-        Vehicle vehicle = view.getVehicleDetails();
-        Loan loan = view.getLoanDetails();
+    public void processLoan(Loan loan, Vehicle vehicle) {
+        if(vehicle == null || loan == null){
+            vehicle = view.getVehicleDetails();
+           loan = view.getLoanDetails();
+       }
         loanSimulator.calculateInstallments(loan, vehicle);
         view.displayInstallmentDetails(loan);
     }
