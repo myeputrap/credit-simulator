@@ -101,7 +101,7 @@ public class LoanView {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Input tidak valid. Harap masukkan angka.");
-                scanner.nextLine(); // clear invalid input
+                scanner.nextLine(); 
             }
         }
 
@@ -109,14 +109,24 @@ public class LoanView {
             try {
                 System.out.print("Input Jumlah DP: ");
                 downPayment = scanner.nextDouble();
+                double downPaymentPercentage = downPayment / loanAmount;
+                if (isNew) {
+                    if (downPaymentPercentage < 0.35) {
+                        System.out.println("Sudah melewati batas maksimal Dp.");
+                    }
+                } else {
+                    if (downPaymentPercentage < 0.25) {
+                        System.out.println("Sudah melewati batas maksimal Dp.");
+                    }
+                }
                 if (downPayment > 0) {
                     break;
                 } else {
-                    System.out.println("Input tidak valid. Harap masukkan jumlah DP yang positif.");
+                    System.out.println("Input tidak valid. Harap masukkan jumlah DP yang lebih dari 0.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Input tidak valid. Harap masukkan angka.");
-                scanner.nextLine(); // clear invalid input
+                scanner.nextLine(); 
             }
         }
 
