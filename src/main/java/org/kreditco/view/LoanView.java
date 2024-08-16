@@ -19,7 +19,7 @@ public class LoanView {
         String condition = "";
         int year = 0;
         int currentYear = java.time.Year.now().getValue();
-        scanner.nextLine();
+        //scanner.nextLine();
         while (true) {
             System.out.print("Input Jenis Kendaraan (Motor/Mobil): ");
             type = scanner.nextLine().trim().toLowerCase();
@@ -45,7 +45,7 @@ public class LoanView {
                 System.out.print("Input Tahun Kendaraan (4 Digit): ");
                 year = scanner.nextInt();
                 scanner.nextLine(); // consume newline
-                if (year >= 1000 && year <= 9999) {
+                if (year >= 1000 && year <= 9999 && year < currentYear) {
                     break;
                 } else if (condition.equalsIgnoreCase("baru") && year < currentYear - 1) {
                     System.out.println("Input tidak valid. Tahun Kendaraan tidak boleh sama dengan tahun " + currentYear);
@@ -59,7 +59,7 @@ public class LoanView {
         }
         if (condition.equals("baru")){
             isNew = true;
-        }
+        }else{isNew = false;}
         Vehicle vehicle = new Vehicle();
         vehicle.setType(type);
         vehicle.setCondition(condition);
@@ -109,20 +109,23 @@ public class LoanView {
             try {
                 System.out.print("Input Jumlah DP: ");
                 downPayment = scanner.nextDouble();
-                double downPaymentPercentage = downPayment / loanAmount;
+                boolean validDownPayment = false;
                 if (isNew) {
-                    if (downPaymentPercentage < 0.35) {
-                        System.out.println("Sudah melewati batas maksimal Dp.");
+                    if (downPayment > 0 && downPayment <= (loanAmount * 0.35)) {
+                        validDownPayment = true;
+                    } else {
+                        System.out.println("Sudah melewati batas maksimal DP sebesar 35%.");
                     }
                 } else {
-                    if (downPaymentPercentage < 0.25) {
-                        System.out.println("Sudah melewati batas maksimal Dp.");
+                    if (downPayment > 0 && downPayment <= (loanAmount * 0.25)) {
+                        validDownPayment = true;
+                    } else {
+                        System.out.println("Sudah melewati batas maksimal DP sebesar 25%.");
                     }
                 }
-                if (downPayment > 0) {
-                    break;
-                } else {
-                    System.out.println("Input tidak valid. Harap masukkan jumlah DP yang lebih dari 0.");
+
+                if (validDownPayment) {
+                    break; // Only break the loop if the down payment is valid
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Input tidak valid. Harap masukkan angka.");

@@ -1,0 +1,61 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - staging
+  pull_request:
+    branches:
+      - master
+      - main
+      - staging
+
+jobs:
+  build:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:stable-dind
+        options: --privileged
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.HARBOR_PASSWORD }} | docker login -u ${{ secrets.HARBOR_USERNAME }} ${{ secrets.HARBOR_HOST }} --password-stdin
+
+      - name: Determine Docker Tag
+        id: docker_tag
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]] || [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "tag=stable" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+            echo "tag=staging" >> $GITHUB_ENV
+          else
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.HARBOR_HOST }}/${{ secrets.HARBOR_PROJECT }}/$PROJECT_NAME:${{ env.tag }} .
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.HARBOR_HOST }}/${{ secrets.HARBOR_PROJECT }}/$PROJECT_NAME:${{ env.tag }}
+
+  deploy:
+    name: Deploy to Rancher
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/staging'
+    steps:
+      - name: Rancher Deploy
+        run: |
+          docker run --rm cdrx/rancher-gitlab-deploy upgrade --rancher-url ${{ secrets.RANCHER_URL }} --rancher-key ${{ secrets.RANCHER_ACCESS_KEY }} --rancher-secret ${{ secrets.RANCHER_SECRET_KEY }} --stack Apps-Service-Saksi-Management --service $PROJECT_NAME --new-image ${{ secrets.HARBOR_HOST }}/${{ secrets.HARBOR_PROJECT }}/$PROJECT_NAME:staging --create

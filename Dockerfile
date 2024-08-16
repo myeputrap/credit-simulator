@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY credit_simulator.jar /app/credit_simulator.jar
+COPY credit-simulator.jar /app/credit-simulator.jar
 
 # Set the entry point for the container to run the Java application
-ENTRYPOINT ["java", "-jar", "/app/credit_simulator.jar"]
+ENTRYPOINT ["java", "-jar", "/app/credit-simulator.jar"]

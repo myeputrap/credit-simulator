@@ -1,0 +1,4 @@
+variables:
+  PROJECT_NAME: credit-simulator
+  REPO_NAME: $CI_PROJECT_DIR/credit-simulator.git
+  GIT_SUBMODULE_STRATEGY: recursive
